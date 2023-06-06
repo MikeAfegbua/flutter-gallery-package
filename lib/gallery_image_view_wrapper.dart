@@ -71,7 +71,21 @@ class _GalleryImageViewWrapperState extends State<GalleryImageViewWrapper> {
     return Scaffold(
       appBar: widget.showAppBar
           ? AppBar(
-              title: Text(widget.titleGallery ?? "Gallery"),
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: Text(
+                widget.titleGallery ?? "Gallery",
+                style: const TextStyle(color: Colors.white),
+              ),
+              elevation: 0,
+              backgroundColor: Colors.transparent,
             )
           : null,
       backgroundColor: widget.backgroundColor,
@@ -96,6 +110,7 @@ class _GalleryImageViewWrapperState extends State<GalleryImageViewWrapper> {
                     }
                   },
                   child: PageView.builder(
+                    padEnds: false,
                     reverse: widget.reverse,
                     controller: _controller,
                     itemCount: widget.galleryItems.length,
@@ -127,14 +142,64 @@ class _GalleryImageViewWrapperState extends State<GalleryImageViewWrapper> {
   Widget _buildImage(GalleryItemModel item) {
     return Hero(
       tag: item.id,
-      child: InteractiveViewer(
-        minScale: widget.minScale,
-        maxScale: widget.maxScale,
-        child: Center(
-          child: LocalAssetImage(
-            imagePath: item.imageUrl,
-            radius: widget.radius,
-          ),
+      child: Material(
+        color: Colors.transparent,
+        child: Stack(
+          children: [
+            InteractiveViewer(
+              minScale: widget.minScale,
+              maxScale: widget.maxScale,
+              child: Center(
+                child: LocalAssetImage(
+                  imagePath: item.imageUrl,
+                  radius: widget.radius,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            ),
+            if (_currentPage != 0)
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                child: InkWell(
+                  child: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: Colors.white,
+                    size: 51,
+                  ),
+                  onTap: () {
+                    {
+                      _controller.previousPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                ),
+              ),
+            if (_currentPage != widget.galleryItems.length - 1)
+              Positioned(
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: Colors.white,
+                    size: 51,
+                  ),
+                  onPressed: () {
+                    {
+                      _controller.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                ),
+              ),
+          ],
         ),
       ),
     );
