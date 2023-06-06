@@ -73,7 +73,7 @@ class _GalleryImageState extends State<GalleryImage> {
         ? const EmptyWidget()
         : GridView.builder(
             primary: false,
-            itemCount: galleryItems.length > 3
+            itemCount: galleryItems.length > 2
                 ? widget.numOfShowImages
                 : galleryItems.length,
             padding: widget.padding,
@@ -92,11 +92,10 @@ class _GalleryImageState extends State<GalleryImage> {
                       onTap: () {
                         _openImageFullScreen(index);
                       },
-                      loadingWidget: widget.loadingWidget,
-                      errorWidget: widget.errorWidget,
                       radius: widget.imageRadius,
                     );
-            });
+            },
+          );
   }
 
 // build image with number for other images
@@ -111,8 +110,6 @@ class _GalleryImageState extends State<GalleryImage> {
         children: <Widget>[
           GalleryItemThumbnail(
             galleryItem: galleryItems[index],
-            loadingWidget: widget.loadingWidget,
-            errorWidget: widget.errorWidget,
             onTap: null,
             radius: widget.imageRadius,
           ),

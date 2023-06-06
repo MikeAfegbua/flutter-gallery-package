@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:galleryimage/app_cached_network_image.dart';
+import 'package:galleryimage/asset_image.dart';
 
 import 'gallery_item_model.dart';
 
@@ -7,18 +7,15 @@ import 'gallery_item_model.dart';
 class GalleryItemThumbnail extends StatelessWidget {
   final GalleryItemModel galleryItem;
   final GestureTapCallback? onTap;
-  final Widget? loadingWidget;
-  final Widget? errorWidget;
+
   final double radius;
 
-  const GalleryItemThumbnail(
-      {Key? key,
-      required this.galleryItem,
-      required this.onTap,
-      required this.radius,
-      required this.loadingWidget,
-      required this.errorWidget})
-      : super(key: key);
+  const GalleryItemThumbnail({
+    Key? key,
+    required this.galleryItem,
+    required this.onTap,
+    required this.radius,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +23,9 @@ class GalleryItemThumbnail extends StatelessWidget {
       onTap: onTap,
       child: Hero(
         tag: galleryItem.id,
-        child: AppCachedNetworkImage(
+        child: LocalAssetImage(
           fit: BoxFit.cover,
-          imageUrl: galleryItem.imageUrl,
-          loadingWidget: loadingWidget,
-          errorWidget: errorWidget,
+          imagePath: galleryItem.imageUrl,
           radius: radius,
         ),
       ),

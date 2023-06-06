@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:galleryimage/app_cached_network_image.dart';
+import 'package:galleryimage/asset_image.dart';
 
 import 'gallery_item_model.dart';
 
@@ -131,10 +131,8 @@ class _GalleryImageViewWrapperState extends State<GalleryImageViewWrapper> {
         minScale: widget.minScale,
         maxScale: widget.maxScale,
         child: Center(
-          child: AppCachedNetworkImage(
-            imageUrl: item.imageUrl,
-            loadingWidget: widget.loadingWidget,
-            errorWidget: widget.errorWidget,
+          child: LocalAssetImage(
+            imagePath: item.imageUrl,
             radius: widget.radius,
           ),
         ),
@@ -152,14 +150,12 @@ class _GalleryImageViewWrapperState extends State<GalleryImageViewWrapper> {
             _controller.jumpToPage(item.index);
           });
         },
-        child: AppCachedNetworkImage(
+        child: LocalAssetImage(
           height: _currentPage == item.index ? 70 : 60,
           width: _currentPage == item.index ? 70 : 60,
           fit: BoxFit.cover,
-          imageUrl: item.imageUrl,
-          errorWidget: widget.errorWidget,
+          imagePath: item.imageUrl,
           radius: widget.radius,
-          loadingWidget: widget.loadingWidget,
         ),
       ),
     );
