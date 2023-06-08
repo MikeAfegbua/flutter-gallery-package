@@ -167,7 +167,10 @@ class _GalleryImageState extends State<GalleryImage> {
     galleryItems.clear();
     for (var item in items) {
       galleryItems.add(
-        GalleryItemModel(id: item, imageUrl: item, index: items.indexOf(item)),
+        GalleryItemModel(
+            id: '${widget.titleGallery}$item',
+            imageUrl: item,
+            index: items.indexOf(item)),
       );
     }
   }
