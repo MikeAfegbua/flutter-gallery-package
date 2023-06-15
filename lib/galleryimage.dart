@@ -3,18 +3,13 @@ library galleryimage;
 import 'package:flutter/material.dart';
 
 import 'gallery_item_model.dart';
-import 'gallery_item_thumbnail.dart';
 import './gallery_image_view_wrapper.dart';
-import './util.dart';
+import 'images_widget.dart';
 
 class GalleryImage extends StatefulWidget {
   final List<String> imageUrls;
   final String? titleGallery;
   final int numOfShowImages;
-  final int crossAxisCount;
-  final double mainAxisSpacing;
-  final double crossAxisSpacing;
-  final double childAspectRatio;
   final EdgeInsetsGeometry padding;
   final Color? colorOfNumberWidget;
   final Color galleryBackgroundColor;
@@ -34,10 +29,6 @@ class GalleryImage extends StatefulWidget {
     Key? key,
     required this.imageUrls,
     this.titleGallery,
-    this.childAspectRatio = 1,
-    this.crossAxisCount = 3,
-    this.mainAxisSpacing = 5,
-    this.crossAxisSpacing = 5,
     this.numOfShowImages = 3,
     this.colorOfNumberWidget,
     this.textStyleOfNumberWidget,
@@ -70,71 +61,13 @@ class _GalleryImageState extends State<GalleryImage> {
   @override
   Widget build(BuildContext context) {
     return galleryItems.isEmpty
-        ? const EmptyWidget()
-        : GridView.builder(
-            primary: false,
-            itemCount: galleryItems.length > 2
-                ? widget.numOfShowImages
-                : galleryItems.length,
-            padding: widget.padding,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: widget.childAspectRatio,
-              crossAxisCount: widget.crossAxisCount,
-              mainAxisSpacing: widget.mainAxisSpacing,
-              crossAxisSpacing: widget.crossAxisSpacing,
-            ),
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) {
-              return _isLastItem(index)
-                  ? _buildImageNumbers(index)
-                  : GalleryItemThumbnail(
-                      galleryItem: galleryItems[index],
-                      onTap: () {
-                        _openImageFullScreen(index);
-                      },
-                      radius: widget.imageRadius,
-                    );
+        ? const SizedBox.shrink()
+        : DynamicImagesWidget(
+            imagesList: galleryItems,
+            onTap: (index) {
+              _openImageFullScreen(index);
             },
           );
-  }
-
-// build image with number for other images
-  Widget _buildImageNumbers(int index) {
-    return GestureDetector(
-      onTap: () {
-        _openImageFullScreen(index);
-      },
-      child: Stack(
-        alignment: AlignmentDirectional.center,
-        fit: StackFit.expand,
-        children: <Widget>[
-          GalleryItemThumbnail(
-            galleryItem: galleryItems[index],
-            onTap: null,
-            radius: widget.imageRadius,
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(widget.imageRadius)),
-            child: ColoredBox(
-              color: widget.colorOfNumberWidget ?? Colors.black.withOpacity(.7),
-              child: Center(
-                child: Text(
-                  "+${galleryItems.length - index}",
-                  style: widget.textStyleOfNumberWidget ??
-                      const TextStyle(color: Colors.white, fontSize: 40),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-// Check if item is last image in grid to view image or number
-  bool _isLastItem(int index) {
-    return index < galleryItems.length - 1 &&
-        index == widget.numOfShowImages - 1;
   }
 
 // to open gallery image in full screen
